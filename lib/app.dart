@@ -14,6 +14,9 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:shrine/about.dart';
+import 'package:shrine/cartScreen.dart';
+import 'package:shrine/product_detail.dart';
 
 import 'home.dart';
 import 'login.dart';
@@ -50,13 +53,8 @@ class _ShrineAppState extends State<ShrineApp> {
         '/login': (BuildContext context) => const LoginPage(),
         // TODO: Change to a Backdrop with a HomePage frontLayer (104)
         '/': (BuildContext context) => Backdrop(
-            // TODO: Make currentCategory field take _currentCategory (104)
             currentCategory: _currentCategory,
-
-            // TODO: Pass _currentCategory for frontLayer (104)
             frontLayer: HomePage(category: _currentCategory),
-
-            // TODO: Change backLayer field value to CategoryMenuPage (104)
             backLayer: CategoryMenuPage(
               currentCategory: _currentCategory,
               onCategoryTap: _onCategoryTap,
@@ -64,6 +62,10 @@ class _ShrineAppState extends State<ShrineApp> {
             frontTitle: Text('Thania KShop'),
             backTitle: Text('MENU'),
         ),
+        '/cart': (context) => const CartScreen(),
+        '/about': (context) => const AboutScreen(),
+        '/product': (context) => const ProductDetailScreen(),
+
         // TODO: Make currentCategory field take _currentCategory (104)
         // TODO: Pass _currentCategory for frontLayer (104)
         // TODO: Change backLayer field value to CategoryMenuPage (104)

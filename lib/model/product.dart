@@ -42,6 +42,8 @@ class Product {
   final String assetName;
   final String? assetPackage;
 
+  String get description => 'No description available';
+  
   @override
   String toString() => "$name (id=$id)";
 
