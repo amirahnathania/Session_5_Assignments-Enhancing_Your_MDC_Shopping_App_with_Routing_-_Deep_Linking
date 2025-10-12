@@ -12,32 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 import 'package:flutter/material.dart';
-import 'package:shrine/about.dart';
-import 'package:shrine/cartScreen.dart';
-import 'package:shrine/product_detail.dart';
 
 import 'home.dart';
 import 'login.dart';
 import 'colors.dart';
 import 'supplemental/cut_corners_border.dart';
-
 import 'backdrop.dart';
-import 'model/product.dart'; 
-
+import 'model/product.dart';
 import 'category_menu_page.dart';
 
-// TODO: Convert ShrineApp to stateful widget (104)
+// Tambahan: import halaman baru untuk named routes
+import 'cartScreen.dart';
+import 'about.dart';
+import 'product_detail.dart';
+
 class ShrineApp extends StatefulWidget {
   const ShrineApp({Key? key}) : super(key: key);
+
   @override
   State<ShrineApp> createState() => _ShrineAppState();
 }
 
 class _ShrineAppState extends State<ShrineApp> {
+  // State untuk kategori aktif
   Category _currentCategory = Category.all;
 
+  // Fungsi untuk mengganti kategori
   void _onCategoryTap(Category category) {
     setState(() {
       _currentCategory = category;
@@ -48,50 +49,50 @@ class _ShrineAppState extends State<ShrineApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Thania KShop',
+      debugShowCheckedModeBanner: true,
+
+      // Gunakan login sebagai halaman pertama (sesuai punyamu)
       initialRoute: '/login',
+
+      // Named Routes
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
-        // TODO: Change to a Backdrop with a HomePage frontLayer (104)
         '/': (BuildContext context) => Backdrop(
-            currentCategory: _currentCategory,
-            frontLayer: HomePage(category: _currentCategory),
-            backLayer: CategoryMenuPage(
               currentCategory: _currentCategory,
-              onCategoryTap: _onCategoryTap,
+              frontLayer: HomePage(category: _currentCategory),
+              backLayer: CategoryMenuPage(
+                currentCategory: _currentCategory,
+                onCategoryTap: _onCategoryTap,
+              ),
+              frontTitle: const Text('Thania KShop'),
+              backTitle: const Text('MENU'),
             ),
-            frontTitle: Text('Thania KShop'),
-            backTitle: Text('MENU'),
-        ),
-        '/cart': (context) => const CartScreen(),
-        '/about': (context) => const AboutScreen(),
-        '/product': (context) => const ProductDetailScreen(),
-
-        // TODO: Make currentCategory field take _currentCategory (104)
-        // TODO: Pass _currentCategory for frontLayer (104)
-        // TODO: Change backLayer field value to CategoryMenuPage (104)
+        '/cart': (BuildContext context) => const CartScreen(),
+        '/about': (BuildContext context) => const AboutScreen(),
+        '/product': (BuildContext context) => const ProductDetailScreen(),
       },
-      // TODO: Customize the theme (103)
+
+      // Tema tetap seperti punyamu sebelumnya (warna pink)
       theme: _buildShrineTheme(),
     );
   }
 }
 
-// TODO: Build a Shrine Theme (103)
 final ThemeData kShrineTheme = _buildShrineTheme();
-// TODO: Build a Shrine Text Theme (103)
+
 TextTheme _buildShrineTextTheme(TextTheme base) {
   return base.copyWith(
-    headlineSmall: base.headlineSmall!.copyWith(
+    headlineSmall: base.headlineSmall?.copyWith(
       fontWeight: FontWeight.w500,
     ),
-    titleLarge: base.titleLarge!.copyWith(
+    titleLarge: base.titleLarge?.copyWith(
       fontSize: 18.0,
     ),
-    bodySmall: base.bodySmall!.copyWith(
+    bodySmall: base.bodySmall?.copyWith(
       fontWeight: FontWeight.w400,
       fontSize: 14.0,
     ),
-    bodyLarge: base.bodyLarge!.copyWith(
+    bodyLarge: base.bodyLarge?.copyWith(
       fontWeight: FontWeight.w500,
       fontSize: 16.0,
     ),
@@ -104,6 +105,7 @@ TextTheme _buildShrineTextTheme(TextTheme base) {
 
 ThemeData _buildShrineTheme() {
   final ThemeData base = ThemeData.light();
+
   return base.copyWith(
     colorScheme: base.colorScheme.copyWith(
       primary: kShrinePink100,
@@ -132,5 +134,3 @@ ThemeData _buildShrineTheme() {
     ),
   );
 }
-
-// TODO: Build a Shrine Text Theme (103)

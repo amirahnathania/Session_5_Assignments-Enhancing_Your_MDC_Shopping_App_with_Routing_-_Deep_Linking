@@ -28,41 +28,26 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final products = ProductsRepository.loadProducts(category);
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+    );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Thania KShop'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              Navigator.pushNamed(context, '/cart');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () {
-              Navigator.pushNamed(context, '/about');
-            },
-          ),
-        ],
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: GridView.builder(
         itemCount: products.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 2 kolom
+          crossAxisCount: 2, // Dua kolom
           mainAxisSpacing: 16,
           crossAxisSpacing: 16,
           childAspectRatio: 8.0 / 9.0,
         ),
         itemBuilder: (context, index) {
           final product = products[index];
-          final formatCurrency = NumberFormat.simpleCurrency(locale: 'en_US');
 
           return GestureDetector(
             onTap: () {
-              // Navigasi ke halaman Product Detail dengan id produk
               Navigator.pushNamed(
                 context,
                 '/product',
