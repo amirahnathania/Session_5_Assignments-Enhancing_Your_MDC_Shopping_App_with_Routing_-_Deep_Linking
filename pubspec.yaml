@@ -1,0 +1,69 @@
+name: shrine
+description: Learn the basics of using Material Components by building a simple app with core components.
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.17.0
+
+  cupertino_icons: ^1.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  # TODO: Insert Fonts (103)
+  fonts:
+  - family: Rubik
+    fonts:
+      - asset: fonts/Rubik-Regular.ttf
+      - asset: fonts/Rubik-Medium.ttf
+        weight: 500
+  uses-material-design: true
+  assets:
+    - assets/logo.png
+    - assets/slanted_menu.png
+    # TODO: Add slanted menu asset (104)
+    - assets/Kpop/Jeno.jpg
+    - assets/Kpop/Mark.jpg
+    - assets/Kpop/Jaemin.jpg
+    - assets/Kpop/Renjun.jpg
+    - assets/Kpop/Chenle.jpg
+    - assets/Kpop/Jisung.jpg
+    - assets/Kpop/Haechan.jpg
+    - assets/Kpop/GrupBTS.jpg
+    - assets/Kpop/RM.jpg
+    - assets/Kpop/J-Hope.jpg
+    - assets/Kpop/Suga.jpg
+    - assets/Kpop/Jin.jpg
+    - assets/Kpop/Taehyung.jpg
+    - assets/Kpop/Jungkook.jpg
+    - assets/Kpop/Jimin.jpg
+    - assets/Kpop/NCTDream.jpg
+    - assets/Kpop/NCT127.jpg
+    - assets/Kpop/Taeil.jpg
+    - assets/Kpop/Doyoung.jpg
+    - assets/Kpop/Taeyong.jpg
+    - assets/Kpop/Yuta.jpg
+    - assets/Kpop/Jaehyun.jpg
+    - assets/Kpop/Jungwoo.jpg
+    - assets/Kpop/Winwin.jpg
+    - assets/Kpop/Johnny.jpg
+    - assets/Kpop/Wayv.jpg
+    - assets/Kpop/Ten.jpg
+    - assets/Kpop/Xiaojun.jpg
+    - assets/Kpop/Hendery.jpg
+    - assets/Kpop/Yangyang.jpg
+    - assets/Kpop/Kun.jpg
+    - assets/Kpop/Lucas.jpg
+    - assets/Kpop/TXT.jpg
+    - assets/Kpop/Yeonjun.jpg
+    - assets/Kpop/Soobin.jpg
+    - assets/Kpop/Beomgyu.jpg
+    - assets/Kpop/Heuningkai.jpg
+    - assets/Kpop/Taehyun.jpg
