@@ -84,7 +84,19 @@ class _ShrineAppState extends State<ShrineApp> {
         '/': (context) => const Home(), // Home tanpa parameter
         '/cart': (context) => const CartScreen(),
         '/about': (context) => const AboutScreen(),
-        '/product': (context) => const ProductDetailScreen(),
+        '/product': (context) {
+          final productId = ModalRoute.of(context)?.settings.arguments as int?;
+          final product = productId != null
+              ? ProductsRepository.loadProductById(productId)
+              : null;
+          if (product != null) {
+            return ProductDetailScreen(product: product);
+          } else {
+            return const Scaffold(
+              body: Center(child: Text('Product not found')),
+            );
+          }
+        },
         // Jangan pakai '/product' di routes karena butuh argument
       },
       theme: _kShrineTheme,

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'model/product.dart';
 import 'model/products_repository.dart';
 
-// 🌷 Palet warna khas Thania KShop
+
 const kThaniaPink = Color(0xFFF6D7E4);
 const kThaniaSoftPink = Color(0xFFFDEEF5);
 const kThaniaText = Color(0xFF4A3F35);
 const kThaniaAccent = Color(0xFFEFBAD6);
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({Key? key}) : super(key: key);
+  final Product product;
+  const ProductDetailScreen({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

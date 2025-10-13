@@ -330,4 +330,13 @@ class ProductsRepository {
       }).toList();
     }
   }
+
+  static Product? loadProductById(int id) {
+    final allProducts = loadProducts(Category.all);
+    try {
+      return allProducts.firstWhere((product) => product.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
 }
