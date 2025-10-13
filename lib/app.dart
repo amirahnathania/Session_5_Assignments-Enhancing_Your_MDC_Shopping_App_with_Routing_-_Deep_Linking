@@ -1,31 +1,16 @@
-// Copyright 2018-present the Flutter authors. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:app_links/app_links.dart';
 
 import 'home.dart';
 import 'login.dart';
 import 'colors.dart';
 import 'supplemental/cut_corners_border.dart';
-import 'backdrop.dart';
-import 'model/product.dart';
-import 'category_menu_page.dart';
-
-// Tambahan: import halaman baru untuk named routes
-import 'cartScreen.dart';
+import 'ProductDetailScreen.dart';
+import 'cart.dart';
 import 'about.dart';
-import 'product_detail.dart';
+import 'model/product.dart';
+import 'model/products_repository.dart';
 
 class ShrineApp extends StatefulWidget {
   const ShrineApp({Key? key}) : super(key: key);
@@ -35,77 +20,107 @@ class ShrineApp extends StatefulWidget {
 }
 
 class _ShrineAppState extends State<ShrineApp> {
-  // State untuk kategori aktif
-  Category _currentCategory = Category.all;
+  late final AppLinks _appLinks;
+  StreamSubscription<Uri>? _linkSubscription;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  // Fungsi untuk mengganti kategori
-  void _onCategoryTap(Category category) {
-    setState(() {
-      _currentCategory = category;
+  @override
+  void initState() {
+    super.initState();
+    _initDeepLinks();
+  }
+
+  Future<void> _initDeepLinks() async {
+    _appLinks = AppLinks();
+    _linkSubscription = _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null) _handleDeepLink(uri);
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleInitialLink();
+    });
+  }
+
+  Future<void> _handleInitialLink() async {
+    try {
+      final Uri? initialUri = await _appLinks.getInitialLink();
+      if (initialUri != null) _handleDeepLink(initialUri);
+    } catch (e) {
+      print('Error handling initial link: $e');
+    }
+  }
+
+  void _handleDeepLink(Uri uri) {
+    try {
+      if (uri.host == 'product' && uri.pathSegments.isNotEmpty) {
+        final productId = int.tryParse(uri.pathSegments.first);
+        if (productId != null) {
+          navigatorKey.currentState?.pushNamed(
+            '/product',
+            arguments: productId, // Kirim ID saja
+          );
+        }
+      }
+    } catch (e) {
+      print('Error handling deep link: $e');
+    }
+  }
+
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Thania KShop',
-      debugShowCheckedModeBanner: true,
-
-      // Gunakan login sebagai halaman pertama (sesuai punyamu)
+      title: 'THANIA KSHOP',
+      navigatorKey: navigatorKey,
       initialRoute: '/login',
-
-      // Named Routes
       routes: {
-        '/login': (BuildContext context) => const LoginPage(),
-        '/': (BuildContext context) => Backdrop(
-              currentCategory: _currentCategory,
-              frontLayer: HomePage(category: _currentCategory),
-              backLayer: CategoryMenuPage(
-                currentCategory: _currentCategory,
-                onCategoryTap: _onCategoryTap,
-              ),
-              frontTitle: const Text('Thania KShop'),
-              backTitle: const Text('MENU'),
-            ),
-        '/cart': (BuildContext context) => const CartScreen(),
-        '/about': (BuildContext context) => const AboutScreen(),
-        '/product': (BuildContext context) => const ProductDetailScreen(),
+        '/login': (context) => const LoginPage(),
+        '/': (context) => const Home(), // Home tanpa parameter
+        '/cart': (context) => const CartScreen(),
+        '/about': (context) => const AboutScreen(),
+        '/product': (context) => const ProductDetailScreen(),
+        // Jangan pakai '/product' di routes karena butuh argument
       },
-
-      // Tema tetap seperti punyamu sebelumnya (warna pink)
-      theme: _buildShrineTheme(),
+      theme: _kShrineTheme,
     );
   }
 }
 
-final ThemeData kShrineTheme = _buildShrineTheme();
+final ThemeData _kShrineTheme = _buildShrineTheme();
 
 TextTheme _buildShrineTextTheme(TextTheme base) {
-  return base.copyWith(
-    headlineSmall: base.headlineSmall?.copyWith(
-      fontWeight: FontWeight.w500,
-    ),
-    titleLarge: base.titleLarge?.copyWith(
-      fontSize: 18.0,
-    ),
-    bodySmall: base.bodySmall?.copyWith(
-      fontWeight: FontWeight.w400,
-      fontSize: 14.0,
-    ),
-    bodyLarge: base.bodyLarge?.copyWith(
-      fontWeight: FontWeight.w500,
-      fontSize: 16.0,
-    ),
-  ).apply(
-    fontFamily: 'Rubik',
-    displayColor: kShrineBrown900,
-    bodyColor: kShrineBrown900,
-  );
+  return base
+      .copyWith(
+        headlineSmall: base.headlineSmall?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+        titleLarge: base.titleLarge?.copyWith(
+          fontSize: 18.0,
+        ),
+        bodySmall: base.bodySmall?.copyWith(
+          fontWeight: FontWeight.w400,
+          fontSize: 14.0,
+        ),
+        bodyLarge: base.bodyLarge?.copyWith(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0,
+        ),
+      )
+      .apply(
+        fontFamily: 'Rubik',
+        displayColor: kShrineBrown900,
+        bodyColor: kShrineBrown900,
+      );
 }
 
 ThemeData _buildShrineTheme() {
-  final ThemeData base = ThemeData.light();
-
+  final base = ThemeData.light();
   return base.copyWith(
     colorScheme: base.colorScheme.copyWith(
       primary: kShrinePink100,
@@ -113,7 +128,7 @@ ThemeData _buildShrineTheme() {
       secondary: kShrineBrown900,
       error: kShrineErrorRed,
     ),
-    textTheme: _buildShrineTextTheme(base.textTheme),
+    scaffoldBackgroundColor: kShrineSurfaceWhite,
     textSelectionTheme: const TextSelectionThemeData(
       selectionColor: kShrinePink100,
     ),
@@ -122,15 +137,11 @@ ThemeData _buildShrineTheme() {
       backgroundColor: kShrinePink100,
     ),
     inputDecorationTheme: const InputDecorationTheme(
+      border: CutCornersBorder(),
       focusedBorder: CutCornersBorder(
-        borderSide: BorderSide(
-          width: 2.0,
-          color: kShrineBrown900,
-        ),
+        borderSide: BorderSide(width: 2.0, color: kShrineBrown900),
       ),
-      floatingLabelStyle: TextStyle(
-        color: kShrineBrown900,
-      ),
+      floatingLabelStyle: TextStyle(color: kShrineBrown900),
     ),
   );
 }

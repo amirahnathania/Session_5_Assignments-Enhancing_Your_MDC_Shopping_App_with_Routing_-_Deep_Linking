@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'colors.dart'; // gunakan warna tombol yang sudah ada
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,7 +11,18 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  // TODO: Add text editing controllers (101)
+
+  void _handleLogin() {
+    if (_usernameController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter username and password')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,51 +39,54 @@ class _LoginPageState extends State<LoginPage> {
                   child: Image.asset('assets/logo.png'),
                 ),
                 const SizedBox(height: 10.0),
+                Text(
+                  'THANIA KSHOP',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
               ],
             ),
-            const SizedBox(height: 100.0),
+            const SizedBox(height: 40.0),
             TextField(
+              controller: _usernameController,
               decoration: const InputDecoration(
                 labelText: 'Username',
               ),
             ),
             const SizedBox(height: 12.0),
             TextField(
+              controller: _passwordController,
               decoration: const InputDecoration(
                 labelText: 'Password',
               ),
               obscureText: true,
             ),
-            const SizedBox(height: 12.0),
+            const SizedBox(height: 24.0),
             OverflowBar(
               alignment: MainAxisAlignment.end,
               children: <Widget>[
                 TextButton(
                   child: const Text('CANCEL'),
                   onPressed: () {
-                    // TODO: Clear the text fields (101)
                     _usernameController.clear();
                     _passwordController.clear();
                   },
                   style: TextButton.styleFrom(
-                    elevation: 8.0,
                     foregroundColor: Colors.black,
                     shape: const BeveledRectangleBorder(
-                      borderRadius:
-                          BorderRadiusGeometry.all(Radius.circular(7.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
                     ),
                   ),
                 ),
                 ElevatedButton(
                   child: const Text('NEXT'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  onPressed: _handleLogin,
                   style: ElevatedButton.styleFrom(
-                    elevation: 8.0,
+                    foregroundColor: kShrineBrown900,
+                    backgroundColor: kShrinePink100,
                     shape: const BeveledRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(7.0)),
                     ),
+                    elevation: 8.0,
                   ),
                 ),
               ],
