@@ -6,7 +6,13 @@ import 'model/products_repository.dart';
 import 'backdrop.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  // FIXED: Gunakan named parameter dengan default value
+  final bool showAppBar;
+  
+  const Home({
+    Key? key, 
+    this.showAppBar = true, // Default value true
+  }) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -27,6 +33,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    // Home menggunakan Backdrop yang sudah memiliki AppBar sendiri
+    // Jadi kita tidak perlu tambahan Scaffold dengan AppBar
     return Backdrop(
       currentCategory: _currentCategory,
       frontLayer: AsymmetricView(

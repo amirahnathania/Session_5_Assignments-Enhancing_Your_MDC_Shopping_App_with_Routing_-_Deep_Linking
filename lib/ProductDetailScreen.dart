@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // TAMBAHKAN IMPORT INI
 import 'model/product.dart';
 import 'model/products_repository.dart';
-
+import 'model/cart.dart'; // TAMBAHKAN IMPORT INI
 
 const kThaniaPink = Color(0xFFF6D7E4);
 const kThaniaSoftPink = Color(0xFFFDEEF5);
@@ -54,11 +55,7 @@ class ProductDetailScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: kThaniaText),
       ),
       backgroundColor: kThaniaSoftPink,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kThaniaAccent,
-        onPressed: () {},
-        child: const Icon(Icons.shopping_cart_outlined, color: kThaniaText),
-      ),
+      
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,6 +140,58 @@ class ProductDetailScreen extends StatelessWidget {
                       color: kThaniaText,
                       fontSize: 14,
                       height: 1.5,
+                    ),
+                  ),
+
+                  // TAMBAHKAN: Tombol Add to Cart yang besar di bawah deskripsi
+                  const SizedBox(height: 40),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // SAMA DENGAN FLOATING ACTION BUTTON
+                        final cart = Provider.of<Cart>(context, listen: false);
+                        cart.addItem(product!);
+                        
+                        print('✅ Product added to cart: ${product.name}');
+                        print('🛒 Cart items count: ${cart.items.length}');
+                        
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${product.name} added to cart! 🛒'),
+                            duration: const Duration(seconds: 2),
+                            action: SnackBarAction(
+                              label: 'View Cart',
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/cart');
+                              },
+                            ),
+                            backgroundColor: kThaniaAccent,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kThaniaAccent,
+                        foregroundColor: kThaniaText,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_shopping_cart),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Add to Cart',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
